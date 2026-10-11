@@ -14,6 +14,22 @@
 #metric option:checked{background:linear-gradient(#59421a,#59421a);color:#ffe1a0}
 .filter:has(#metric)::after{content:'Select multiple metrics with Ctrl (Windows) or ⌘ (Mac)';display:block;color:#a6a8a6;font-size:10px;margin-top:7px}
 @media(max-width:900px){#metric{min-height:115px}}
+
+/* Refined metric multi-select dropdown */
+.metricpicker{position:relative}
+.metricpickbtn{display:flex;justify-content:space-between;align-items:center;width:100%;background:#090c0d;color:#e9e7df;border:1px solid #343c3e;border-radius:7px;padding:10px;text-align:left;min-height:39px}
+.metricpickbtn:focus{border-color:var(--gold)}
+.metricpickbtn span{color:var(--gold2);margin-left:8px}
+.metricpickmenu{position:absolute;z-index:30;top:calc(100% + 5px);left:0;right:0;max-height:320px;overflow:auto;background:#101516;border:1px solid #6b5227;border-radius:9px;box-shadow:0 16px 40px #000b;padding:7px}
+.metricpickmenu[hidden]{display:none}
+.metricgroup{color:var(--gold2);font-size:10px;letter-spacing:.04em;padding:9px 7px 4px;font-weight:700}
+.metricoption{display:flex;align-items:center;gap:8px;padding:7px;border-radius:5px;color:#e5e3dc;font-size:11px;cursor:pointer}
+.metricoption:hover{background:#202526}
+.metricoption input{accent-color:var(--gold);width:14px;height:14px;flex-shrink:0}
+.metricoption.alloption{border-bottom:1px solid #303637;margin-bottom:4px;padding-bottom:9px}
+.metrichelp{font-size:10px;color:#a6a8a6;margin-top:7px}
+.filter:has(#metric)::after{content:none}
+@media(max-width:900px){.metricpickmenu{max-height:240px}}
 </style></head>
 <body><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
@@ -22,7 +38,7 @@
 <div class="main"><header class="hero"><div><div class="eyebrow">PRODUCT ANALYTICS · MAIN APP</div><h1>Hidaya Analytics</h1><p>Discover insights across your users’ journey.</p></div><div class="updated"><span class="ico">◷</span><div><small>Last Updated</small><b>N/A</b></div></div></header>
 <main class="content"><section class="toolbar" aria-label="Dashboard filters">
 <div class="filter"><label for="platform"><span>▣</span>Platform</label><select id="platform"><option value="all" selected>All platforms</option><option>Android</option><option>iOS</option></select></div>
-<div class="filter"><label for="metric"><span>▥</span>Metric</label><select id="metric" aria-label="Metric" multiple size="5" title="Hold Ctrl (Windows) or Command (Mac) to select multiple metrics">
+<div class="filter"><label for="metric"><span>▥</span>Metric</label><select id="metric" aria-label="Metric" multiple size="5" title="Multi-select metrics" style="display:none">
 <option value="all" selected>All metrics</option>
 <optgroup label="Android · Google Play Console">
 <option value="Daily Device Installs" data-platform="Android" title="Google Play Console metric">Daily Device Installs</option>
@@ -41,7 +57,7 @@
 <option value="Total Downloads" data-platform="iOS" title="App Store Connect metric">Total Downloads</option>
 <option value="Redownloads" data-platform="iOS" title="App Store Connect metric">Redownloads</option>
 </optgroup>
-</select></div>
+</select><div class="metricpicker" id="metricPicker"><button type="button" id="metricPickerToggle" class="metricpickbtn">All metrics <span>⌄</span></button><div id="metricPickerMenu" class="metricpickmenu" hidden></div></div></div>
 <div class="filter"><label for="year"><span>▦</span>Year</label><select id="year"><option value="all" selected>All years</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div>
 <div class="filter"><label for="month"><span>▦</span>Month</label><select id="month"><option value="all" selected>All months</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></div>
 <div class="actions"><button class="btn" id="apply">⌕ &nbsp; Apply Filters</button><button class="btn secondary" id="reset">↻ &nbsp; Reset Filters</button></div></section>
@@ -73,13 +89,41 @@ const metricSelect=$('metric');
 const metricOptions=[...metricSelect.querySelectorAll('option[data-platform]')];
 const metricGroups=[...metricSelect.querySelectorAll('optgroup')];
 let applied={platform:'all',metric:'all',metrics:[],year:'all',month:'all'};
+
+const metricPickerMenu=$('metricPickerMenu'), metricPickerToggle=$('metricPickerToggle');
+function buildMetricPicker(){
+ metricPickerMenu.innerHTML='';
+ const all=document.createElement('label');all.className='metricoption alloption';
+ all.innerHTML='<input type="checkbox" data-value="all"> All metrics';
+ metricPickerMenu.appendChild(all);
+ metricGroups.forEach(group=>{
+   const heading=document.createElement('div');heading.className='metricgroup';heading.textContent=group.label;metricPickerMenu.appendChild(heading);
+   [...group.querySelectorAll('option')].forEach(opt=>{
+     const row=document.createElement('label');row.className='metricoption';
+     const cb=document.createElement('input');cb.type='checkbox';cb.dataset.value=opt.value;cb.checked=opt.selected;
+     const label=document.createElement('span');label.textContent=opt.textContent;
+     row.append(cb,label);metricPickerMenu.appendChild(row);
+     cb.addEventListener('change',()=>{opt.selected=cb.checked;const allOpt=[...metricSelect.options].find(o=>o.value==='all');if(allOpt)allOpt.selected=false;syncMetricPickerChecks();});
+   });
+ });
+ all.querySelector('input').addEventListener('change',e=>{metricSelect.value='all';syncMetricPickerChecks();});
+ syncMetricPickerChecks();
+}
+function syncMetricPickerChecks(){
+ const selected=[...metricSelect.selectedOptions].filter(o=>o.value!=='all');
+ metricPickerMenu.querySelectorAll('input[data-value]').forEach(cb=>{const v=cb.dataset.value;cb.checked=v==='all'?selected.length===0:selected.some(o=>o.value===v);const opt=[...metricSelect.options].find(o=>o.value===v);cb.closest('label').style.display=opt&&(opt.hidden||opt.disabled)?'none':'';});
+ metricPickerToggle.innerHTML=(selected.length?selected.length+' metrics selected':'All metrics')+' <span>⌄</span>';
+}
+metricPickerToggle.addEventListener('click',()=>{metricPickerMenu.hidden=!metricPickerMenu.hidden;});
+document.addEventListener('click',e=>{if(!$('metricPicker').contains(e.target))metricPickerMenu.hidden=true;});
+
 function syncMetricOptions(){
   const platform=$('platform').value;
   metricOptions.forEach(o=>{const show=platform==='all'||o.dataset.platform===platform;o.hidden=!show;o.disabled=!show;});
   metricGroups.forEach(g=>{g.hidden=platform!=='all' && g.label.startsWith(platform==='Android'?'iOS':'Android');});
   const selected=[...metricSelect.selectedOptions].filter(o=>o.value!=='all');
   selected.forEach(o=>{if(o.dataset.platform && platform!=='all' && o.dataset.platform!==platform)o.selected=false;});
-  const allOpt=[...metricSelect.options].find(o=>o.value==='all'); if(allOpt)allOpt.selected=selected.length===0;
+  const allOpt=[...metricSelect.options].find(o=>o.value==='all'); if(allOpt)allOpt.selected=selected.length===0; syncMetricPickerChecks();
 }
 $('platform').addEventListener('change',syncMetricOptions); syncMetricOptions();
 function fmt(v){return Number(v).toLocaleString('en-US',{maximumFractionDigits:2});}
@@ -174,7 +218,7 @@ function render(){
  $('latestRedownload').textContent=lr?fmt(lr[4])+' · '+lr[0]:'N/A';
 }
 $('apply').addEventListener('click',()=>{applied.platform=$('platform').value;applied.year=$('year').value;applied.month=$('month').value;const picked=[...$('metric').selectedOptions].map(o=>o.value).filter(v=>v!=='all');applied.metrics=picked;applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');render();});
-$('reset').addEventListener('click',()=>{for(const id of ['platform','year','month'])$(id).value='all';[...$('metric').options].forEach(o=>o.selected=o.value==='all');applied={platform:'all',metric:'all',metrics:[],year:'all',month:'all'};syncMetricOptions();render();});
+$('reset').addEventListener('click',()=>{for(const id of ['platform','year','month'])$(id).value='all';[...$('metric').options].forEach(o=>o.selected=o.value==='all');applied={platform:'all',metric:'all',metrics:[],year:'all',month:'all'};syncMetricOptions();syncMetricPickerChecks();render();});
 $('export').addEventListener('click',()=>{
  const rows=filtered(), aggr=new Map();
  rows.forEach(r=>{const key=[r[1],r[2],r[3],r[0].slice(0,7)].join('|');if(!aggr.has(key))aggr.set(key,{platform:r[1],app:r[2],metric:r[3],ym:r[0].slice(0,7),sum:0,lastDate:r[0],lastValue:r[4]});const a=aggr.get(key);a.sum+=r[4]||0;if(r[0]>=a.lastDate){a.lastDate=r[0];a.lastValue=r[4];}});
@@ -182,6 +226,7 @@ $('export').addEventListener('click',()=>{
  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hidaya-analytics-filtered-results.csv';a.click();URL.revokeObjectURL(a.href);
 });
 $('language').addEventListener('change',e=>{if(e.target.value==='ar'){alert('Arabic localization is not implemented in this preview yet. English remains the default.');e.target.value='en';}});
+buildMetricPicker();
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(btn.dataset.page!=='Overview')alert(btn.dataset.page+' is still a planned page; this build currently makes Overview filters, KPIs, chart, results, and CSV export functional.');}));
 window.addEventListener('resize',()=>render());
 render();
