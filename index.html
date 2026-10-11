@@ -7,6 +7,13 @@
 @media(max-width:1200px){:root{--sidebar:190px}.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{grid-column:span 2;grid-template-columns:1fr 1fr}.actions .btn:first-child{grid-column:span 2}.sectiongrid{grid-template-columns:minmax(0,1.5fr) minmax(220px,1fr)}.countrypanel{grid-column:span 2}.bottomgrid{grid-template-columns:1fr}.kpi .value{font-size:25px}}
 @media(max-width:760px){.snapshots{grid-template-columns:1fr}.snapshothead{align-items:flex-start;flex-direction:column}.app{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:5;display:block;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:0;border:0}.brandmark{width:36px;height:36px}.brand strong{font-size:12px}.nav{display:flex;overflow-x:auto;margin-top:9px;gap:5px}.nav button{white-space:nowrap;padding:8px 10px;font-size:11px}.nav button .ico{font-size:14px;width:auto}.sidebottom{display:none}.hero{min-height:130px;padding:20px 16px}.updated{min-width:auto;padding:9px}.updated .ico{display:none}.updated b{font-size:13px}.content{padding:13px}.toolbar{padding:9px;gap:8px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kpi{padding:12px;min-height:115px}.kpiicon{width:35px;height:35px;font-size:16px}.kpi .value{font-size:24px}.sectiongrid{grid-template-columns:1fr}.countrypanel{grid-column:auto}.bottomgrid{grid-template-columns:1fr}.panel{padding:12px}}
 @media(max-width:430px){.toolbar{grid-template-columns:1fr 1fr}.filter{padding:9px}.filter label{font-size:11px}.filter select{font-size:11px;padding:9px 6px}.actions{grid-column:span 2}.hero h1{font-size:24px}.hero p{font-size:11px}.eyebrow{font-size:8px}.updated{font-size:10px}.updated small{font-size:9px}.kpihead{gap:7px}.kpi label{font-size:10px}.kpi .note{font-size:9px}.kpi .value{font-size:22px}}
+
+/* Multi-select polish */
+#metric{min-height:138px;padding:7px;line-height:1.55}
+#metric option{padding:5px 7px;border-radius:4px}
+#metric option:checked{background:linear-gradient(#59421a,#59421a);color:#ffe1a0}
+.filter:has(#metric)::after{content:'Select multiple metrics with Ctrl (Windows) or ⌘ (Mac)';display:block;color:#a6a8a6;font-size:10px;margin-top:7px}
+@media(max-width:900px){#metric{min-height:115px}}
 </style></head>
 <body><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
@@ -100,8 +107,8 @@ function drawChart(rows){
  const w=Math.max(300,canvas.clientWidth), h=190, dpr=window.devicePixelRatio||1;
  canvas.width=w*dpr; canvas.height=h*dpr; ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
  const metric=applied.metric;
- if(metric==='all'){
-   $('chartHint').style.display='block'; $('chartHint').innerHTML='<b>Select a specific metric to display its trend</b><small>Metrics are not combined across definitions.</small>';
+ if(metric==='all'||metric==='multiple'){
+   $('chartHint').style.display='block'; $('chartHint').innerHTML=metric==='multiple'?'<b>Multiple metrics selected</b><small>Filtered records include all selected metrics. Choose one metric to view its trend without mixing different measurement units.</small>':'<b>Select a specific metric to display its trend</b><small>Metrics are not combined across definitions.</small>';
    return;
  }
  $('chartHint').style.display='none';
@@ -142,8 +149,8 @@ function drawChart(rows){
 }
 function render(){
  const rows=filtered(), android=rows.filter(r=>r[1]==='Android'), ios=rows.filter(r=>r[1]==='iOS');
- $('kpi1label').textContent=applied.metric==='all'?'Select a Metric':applied.metric==='Active Device Installs'?'Latest Active Device Installs':'Filtered Metric Sum';
- $('kpi1').textContent=metricValue(rows,applied.metric);
+ $('kpi1label').textContent=applied.metric==='all'?'Select a Metric':applied.metric==='multiple'?'Multiple metrics · records only':applied.metric==='Active Device Installs'?'Latest Active Device Installs':'Filtered Metric Sum';
+ $('kpi1').textContent=applied.metric==='multiple'?'N/A':metricValue(rows,applied.metric);
  $('kpi2').textContent=fmt(rows.length); $('kpi3').textContent=fmt(android.length); $('kpi4').textContent=fmt(ios.length);
  const total=rows.length, ap=total?android.length/total*100:0, ip=total?ios.length/total*100:0;
  $('donut').style.background=`conic-gradient(var(--gold) 0 ${ap}%, #aeb6b6 ${ap}% 100%)`;
@@ -173,7 +180,7 @@ $('export').addEventListener('click',()=>{
  const csv=[['Platform','App','Metric','Year-Month','Value','Aggregation Note'],...[...aggr.values()].map(a=>[a.platform,a.app,a.metric,a.ym,a.metric==='Active Device Installs'?a.lastValue:a.sum,a.metric==='Active Device Installs'?'Latest daily snapshot; not summed':'Sum of source daily values'])].map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');
  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hidaya-analytics-filtered-results.csv';a.click();URL.revokeObjectURL(a.href);
 });
-$('language').addEventListener('change',e=>{if(e.target.value==='ar'){alert('Arabic localization is not implemented in this data-loaded preview yet. English remains the default.');e.target.value='en';}});
+$('language').addEventListener('change',e=>{if(e.target.value==='ar'){alert('Arabic localization is not implemented in this preview yet. English remains the default.');e.target.value='en';}});
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(btn.dataset.page!=='Overview')alert(btn.dataset.page+' is still a planned page; this build currently makes Overview filters, KPIs, chart, results, and CSV export functional.');}));
 window.addEventListener('resize',()=>render());
 render();
