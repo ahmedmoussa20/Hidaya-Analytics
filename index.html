@@ -82,6 +82,61 @@ table{border-collapse:collapse;width:100%;font-size:12px}th{background:#171c1a;c
 .count{display:none!important}#rowCount{display:none!important}
 @media(max-width:1100px){.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{grid-column:span 2;grid-template-columns:1fr 1fr}.bottomgrid{grid-template-columns:1fr}}
 @media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{padding:12px;gap:12px}.brand{padding-bottom:12px}.nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.nav button{justify-content:center;padding:9px 5px;font-size:10px;gap:5px}.sidebottom{display:none}.hero{min-height:125px;padding:20px 16px}.updated{min-width:0;padding:9px}.content{padding:14px 12px 24px}.toolbar{grid-template-columns:1fr 1fr;padding:9px}.actions{grid-column:span 2}.snapshots{grid-template-columns:1fr;gap:9px}.snapshot{padding:15px 17px}.snapshot .value{font-size:29px}.snapshothead{align-items:flex-start;flex-direction:column}.snapshotdate{white-space:normal}.kpis{grid-template-columns:1fr}.sectiongrid{grid-template-columns:1fr}.emptychart{height:210px}.monthrow span:nth-child(even){display:none}.bottomgrid{grid-template-columns:1fr}}
+
+/* Hidaya Islamic identity + responsive refinements */
+:root{--bg:#07110f;--panel:#0c1916;--panel2:#12231e;--gold:#cba85b;--gold2:#ead39a;--line:#34483a;--text:#f7f5ed;--muted:#a9b7ae;--soft:#1a2b24}
+body{background:radial-gradient(ellipse at 82% 0%,rgba(50,91,68,.34),transparent 36%),radial-gradient(ellipse at 0% 45%,rgba(31,71,55,.2),transparent 40%),#07110f}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.12;background-image:linear-gradient(45deg,transparent 46%,#b69b5e 48%,#b69b5e 49%,transparent 51%),linear-gradient(-45deg,transparent 46%,#b69b5e 48%,#b69b5e 49%,transparent 51%);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 78%)}
+.app{position:relative;z-index:1}.sidebar{background:rgba(5,16,13,.96);border-right-color:#2b4637}
+.brandmark{border-radius:50% 50% 13px 13px;background:linear-gradient(145deg,#203f30,#0a1712);box-shadow:0 0 22px #cba85b12}
+.nav button.active{background:linear-gradient(100deg,#203c2d,#131f18);border-color:#526747;box-shadow:inset 3px 0 var(--gold)}
+.nav button:hover{background:#14271e}
+.hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 80% 15%,rgba(80,121,87,.26),transparent 36%),linear-gradient(100deg,rgba(5,16,13,.97),rgba(10,28,21,.84));border-bottom-color:#344c39}
+.hero:after{content:"";position:absolute;z-index:-1;right:8%;bottom:-64px;width:210px;height:235px;border:1px solid rgba(234,211,154,.2);border-bottom:0;border-radius:110px 110px 0 0;box-shadow:0 0 0 15px rgba(234,211,154,.025),0 0 0 30px rgba(234,211,154,.02);background:linear-gradient(180deg,rgba(70,110,77,.12),transparent);pointer-events:none}
+.hero h1{color:#ead39a}.eyebrow{color:#d8c38d}
+.updated,.snapshotdate{border-color:#3b5742;background:rgba(9,23,17,.88)}
+.toolbar{background:rgba(9,22,17,.91);border-color:#304638}
+.filter{background:linear-gradient(140deg,#13251c,#0b1712);border-color:#2d4335}
+.filter select,.metricpickbtn{background:#08140f;border-color:#2b4032}
+.btn{background:linear-gradient(115deg,#ead39a,#cba85b);border-color:#cba85b}
+.btn.secondary{background:#12221a;border-color:#38503d;color:#eee2c1}
+.snapshot{border-color:#354c39;background:radial-gradient(circle at 0 0,rgba(60,91,53,.3),transparent 60%),linear-gradient(145deg,#13231a,#0a1510)}
+.snapshot:nth-child(3){background:radial-gradient(circle at 100% 0,rgba(203,168,91,.13),transparent 52%),linear-gradient(135deg,#18271b,#0b1510);border-color:#6a5a32}
+.kpi{border-color:#344b38;background:radial-gradient(circle at 0 0,rgba(61,91,55,.27),transparent 56%),linear-gradient(145deg,#122219,#09140f)}
+.kpiicon{background:#203c2b;border-color:#3f5b40;color:#ead39a}
+.panel{border-color:#2e4536;background:linear-gradient(145deg,#102019,#09140f)}
+.emptychart{background:repeating-linear-gradient(to bottom,transparent 0,transparent 49px,#20352a 50px),repeating-linear-gradient(to right,transparent 0,transparent 65px,#182b21 66px);border-color:#344b39}
+th{background:#17291f;color:#e6d39d}td,th{border-bottom-color:#24392b}tbody tr:hover{background:#14271d}
+.recent{background:#12231a;border-color:#2a4231}.recent b{color:#e4cc8c}
+@media(max-width:700px){
+ .sidebar{padding:10px 10px 8px;gap:10px;border-right:0;border-bottom:1px solid #2b4637}
+ .brand{padding:0 3px 10px;gap:9px}
+ .brandmark{width:37px;height:37px}
+ .brand strong{font-size:13px}.brand small{font-size:8px}
+ .nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .nav button{justify-content:flex-start;min-height:42px;padding:8px 7px;font-size:11px;gap:6px;border-color:#203629;background:#0c1b13}
+ .nav button .ico{width:16px;font-size:15px}
+ .hero{min-height:140px;padding:20px 15px;align-items:flex-start;flex-direction:column;gap:12px}
+ .hero:after{right:-16px;bottom:-105px;width:145px;height:180px}
+ .hero h1{font-size:28px}.hero p{font-size:12px;max-width:250px}
+ .updated{align-self:flex-start;padding:8px 11px;min-width:0}
+ .updated b{font-size:13px}.updated small{font-size:10px}
+ .content{padding:12px 10px 22px}
+ .toolbar{grid-template-columns:1fr 1fr;gap:7px;padding:8px;border-radius:13px}
+ .filter{padding:9px 8px}.filter label{font-size:11px;gap:5px}.filter select,.metricpickbtn{padding:9px 7px;font-size:12px}
+ .actions{grid-column:span 2;grid-template-columns:1fr 1fr}
+ .snapshots{grid-template-columns:1fr;gap:8px}
+ .snapshot{padding:14px 15px;border-radius:13px}
+ .snapshot .value{font-size:28px}
+ .snapshothead{gap:8px}
+ .panel{padding:12px;border-radius:13px}
+ .panelhead{flex-wrap:wrap}.legend{white-space:normal;flex-wrap:wrap}
+ .emptychart{height:205px}
+ .tablewrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ table{min-width:540px}
+ .bottomgrid{gap:10px}
+}
+@media(min-width:701px) and (max-width:1100px){.sidebar{padding:18px 10px}.nav button{padding:10px 8px;gap:8px}}
 </style></head>
 <body><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
