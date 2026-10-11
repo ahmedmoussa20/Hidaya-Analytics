@@ -137,6 +137,57 @@ th{background:#17291f;color:#e6d39d}td,th{border-bottom-color:#24392b}tbody tr:h
  .bottomgrid{gap:10px}
 }
 @media(min-width:701px) and (max-width:1100px){.sidebar{padding:18px 10px}.nav button{padding:10px 8px;gap:8px}}
+
+/* Approved Hidaya Islamic dashboard design — presentation-only overrides; data and JS untouched */
+:root{--bg:#04100e;--panel:#0a1916;--panel2:#11251f;--gold:#d8ad56;--gold2:#f3d99a;--line:#3d5a45;--text:#f8f5e9;--muted:#b3c1b7;--soft:#1b3228}
+body{background-color:#04100e;background-image:radial-gradient(ellipse at 50% -14%,rgba(183,143,57,.18),transparent 35%),radial-gradient(ellipse at 82% 10%,rgba(34,90,62,.46),transparent 42%),linear-gradient(180deg,#061410,#03100e 72%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.095;background-image:repeating-linear-gradient(45deg,transparent 0 19px,rgba(220,187,111,.45) 20px,transparent 21px 39px),repeating-linear-gradient(-45deg,transparent 0 19px,rgba(220,187,111,.3) 20px,transparent 21px 39px);background-size:40px 40px;mask-image:linear-gradient(to bottom,#000,transparent 70%)}
+.app{position:relative;z-index:1}
+.sidebar{background:linear-gradient(180deg,rgba(3,17,14,.98),rgba(3,13,12,.98));border-right-color:#294a37}
+.brandmark{border-radius:50% 50% 12px 12px;background:linear-gradient(145deg,#274c35,#081710);box-shadow:0 0 25px rgba(216,173,86,.1)}
+.nav button.active{background:linear-gradient(105deg,#4b3b1b,#15291d);border-color:#9a7837;box-shadow:inset 3px 0 var(--gold)}
+.nav button:hover{background:#152a20}
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:185px;background:linear-gradient(90deg,rgba(3,16,13,.98) 0%,rgba(4,18,14,.85) 48%,rgba(4,17,13,.52) 100%),radial-gradient(ellipse at 78% 90%,rgba(216,173,86,.22),transparent 30%),linear-gradient(180deg,#10291e,#06140f);border-bottom-color:#3b5439}
+.hero:before{content:"";position:absolute;z-index:-1;right:10%;bottom:-5px;width:42%;height:150px;opacity:.52;pointer-events:none;background:linear-gradient(180deg,transparent 0 35%,rgba(3,13,11,.72) 35% 100%);clip-path:polygon(0 100%,0 72%,8% 72%,8% 46%,13% 46%,13% 25%,16% 13%,19% 25%,19% 46%,24% 46%,24% 68%,32% 68%,32% 45%,39% 30%,46% 45%,46% 68%,52% 68%,52% 35%,56% 20%,60% 35%,60% 68%,67% 68%,67% 48%,72% 48%,72% 16%,75% 0,78% 16%,78% 48%,84% 48%,84% 72%,100% 72%,100% 100%)}
+.hero:after{content:"";position:absolute;z-index:-1;right:8%;bottom:-50px;width:220px;height:190px;border:1px solid rgba(243,217,154,.23);border-bottom:0;border-radius:115px 115px 0 0;box-shadow:0 0 0 13px rgba(243,217,154,.025),0 0 0 26px rgba(243,217,154,.02);pointer-events:none}
+.hero h1{color:#f0d18a;text-shadow:0 2px 20px #000;font-family:Georgia,'Times New Roman',serif}
+.eyebrow{color:#e4ca8d}
+.updated,.snapshotdate{border-color:#506447;background:rgba(5,20,14,.9)}
+.toolbar{background:rgba(5,20,15,.94);border-color:#314d39}
+.filter{background:linear-gradient(145deg,#142a1f,#081710);border-color:#2e4935}
+.filter select,.metricpickbtn{background:#06140f;border-color:#314a38}
+.btn{background:linear-gradient(115deg,#f1d48e,#d8ad56);border-color:#d8ad56;color:#151407}
+.btn.secondary{background:#10241a;border-color:#3c5740;color:#f1e4bf}
+.snapshot{border-color:#38533b;background:radial-gradient(circle at 0 0,rgba(75,112,57,.3),transparent 60%),linear-gradient(145deg,#14281c,#07140f)}
+.snapshot:nth-child(2){background:radial-gradient(circle at 100% 0,rgba(60,106,128,.26),transparent 58%),linear-gradient(145deg,#10242a,#071311);border-color:#385867}
+.snapshot:nth-child(3){background:radial-gradient(circle at 100% 0,rgba(216,173,86,.24),transparent 58%),linear-gradient(145deg,#302617,#11180f);border-color:#80622f}
+.snapshot .value,.kpi .value{color:#f0d18a}
+.kpi{border-color:#3a533b;background:radial-gradient(circle at 0 0,rgba(61,105,56,.25),transparent 60%),linear-gradient(145deg,#12251a,#07130f)}
+.kpiicon{background:#203b2a;border-color:#4b6845;color:#f0d18a}
+.panel{border-color:#38513a;background:linear-gradient(145deg,#10231a,#07130f)}
+.emptychart{background:repeating-linear-gradient(to bottom,transparent 0,transparent 49px,#20362a 50px),repeating-linear-gradient(to right,transparent 0,transparent 65px,#182c21 66px);border-color:#38513a}
+th{background:#172c20;color:#f0d18a}td,th{border-bottom-color:#263d2c}tbody tr:hover{background:#13271c}
+.recent{background:#12251a;border-color:#304a35}.recent b{color:#f0d18a}
+@media(max-width:700px){
+ .sidebar{padding:10px 9px 8px;gap:10px;border-right:0;border-bottom:1px solid #2b4936}
+ .brand{padding:0 3px 10px;gap:9px}.brandmark{width:37px;height:37px}
+ .nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .nav button{justify-content:flex-start;min-height:43px;padding:8px 7px;font-size:11px;gap:5px;border-color:#203a2a;background:#0b1b13}
+ .nav button .ico{width:16px;font-size:15px}
+ .hero{min-height:150px;padding:19px 15px;align-items:flex-start;flex-direction:column;gap:12px}
+ .hero:before{right:-5%;width:75%;height:110px;opacity:.38}.hero:after{right:-18px;bottom:-78px;width:140px;height:145px}
+ .hero h1{font-size:28px}.hero p{font-size:12px;max-width:250px}
+ .updated{align-self:flex-start;padding:8px 11px;min-width:0}.updated b{font-size:13px}.updated small{font-size:10px}
+ .content{padding:12px 10px 22px}
+ .toolbar{grid-template-columns:1fr 1fr;gap:7px;padding:8px;border-radius:13px}
+ .filter{padding:9px 8px}.filter label{font-size:11px;gap:5px}.filter select,.metricpickbtn{padding:9px 7px;font-size:12px}
+ .actions{grid-column:span 2;grid-template-columns:1fr 1fr}
+ .snapshots{grid-template-columns:1fr;gap:8px}.snapshot{padding:14px 15px;border-radius:13px}.snapshot .value{font-size:28px}
+ .snapshothead{gap:8px}.panel{padding:12px;border-radius:13px}.panelhead{flex-wrap:wrap}.legend{white-space:normal;flex-wrap:wrap}
+ .emptychart{height:205px}.tablewrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}table{min-width:540px}
+ .bottomgrid{gap:10px}
+}
+@media(min-width:701px) and (max-width:1100px){.sidebar{padding:18px 10px}.nav button{padding:10px 8px;gap:8px}}
 </style></head>
 <body><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
