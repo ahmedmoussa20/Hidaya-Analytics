@@ -38,12 +38,56 @@
 .kpis{grid-template-columns:minmax(240px,1fr)}
 .sectiongrid{grid-template-columns:minmax(0,1fr)}
 .bottomgrid{grid-template-columns:minmax(0,1fr)}
+
+/* Hybrid executive refresh — balanced density, restrained gold */
+:root{--bg:#080a0a;--panel:#101414;--panel2:#151a19;--gold:#c6a15b;--gold2:#e5c98d;--line:#393123;--muted:#a6aaa7;--soft:#202624;--sidebar:224px}
+body{background:radial-gradient(ellipse at 72% 0%,rgba(128,94,37,.13),transparent 34%),var(--bg);font-size:14px;color:#f4f1e9}
+.sidebar{background:linear-gradient(180deg,#0b0e0e,#090b0b);border-right:1px solid #292821;padding:25px 15px;gap:30px}
+.brand{border-bottom:1px solid #292821;padding-bottom:24px}
+.brandmark{border-radius:15px;background:linear-gradient(145deg,#292317,#101211);box-shadow:0 0 0 4px rgba(198,161,91,.04)}
+.nav{gap:7px}.nav button{padding:13px 12px;border-radius:11px;color:#c3c5c0;transition:background .18s,border-color .18s}
+.nav button.active{background:linear-gradient(100deg,rgba(198,161,91,.18),rgba(198,161,91,.04));border-color:#665330;box-shadow:inset 3px 0 var(--gold)}
+.hero{min-height:148px;padding:26px clamp(20px,3vw,42px);background:linear-gradient(100deg,rgba(7,9,9,.98),rgba(14,14,11,.84));border-bottom:1px solid #2c2a22}
+.hero h1{color:#e8d2a2;font-size:clamp(28px,3vw,36px);letter-spacing:-.01em}
+.eyebrow{color:#cdb17a;letter-spacing:.18em}
+.updated{border-color:#393326;background:#101312;border-radius:13px;padding:13px 16px}
+.updated .ico{color:var(--gold2)}.updated b{font-size:14px}
+.content{padding:22px clamp(16px,2vw,30px) 34px;max-width:1800px}
+.toolbar{grid-template-columns:repeat(4,minmax(120px,1fr)) 160px;gap:10px;padding:12px;background:rgba(15,19,18,.88);border-color:#302d24;border-radius:16px}
+.filter{background:#121716;border-color:#292f2d;border-radius:11px;padding:12px}
+.filter label{font-size:11px;color:#d9d6cc}.filter label span{color:#cdb17a}
+.filter select,.metricpickbtn{background:#0b0f0e;border-color:#303734;border-radius:8px;padding:10px 11px;color:#eeeae1}
+.actions{gap:8px}.btn{background:linear-gradient(115deg,#e1c485,#c6a15b);border-color:#c6a15b;border-radius:9px;padding:11px 13px}.btn.secondary{background:#151a18;border-color:#353a35;color:#e4d6b8}
+.snapshothead{margin:22px 0 12px;align-items:center}.snapshothead h2{font-size:14px;color:#e1c58b;letter-spacing:.01em}.snapshothead p{font-size:11px;color:#aeb1ab}
+.snapshotdate{border-color:#393326;color:#ddc48f;background:#101312;padding:8px 11px}
+.snapshots{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.snapshot{position:relative;overflow:hidden;border:1px solid #343126;border-radius:16px;padding:20px;background:linear-gradient(135deg,#151917,#0d1010 78%);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.snapshot:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#a88b4d;opacity:.75}
+.snapshot:nth-child(3){background:radial-gradient(circle at 100% 0,rgba(198,161,91,.13),transparent 52%),linear-gradient(135deg,#191812,#0e1110);border-color:#5b4a2c}
+.snapshot label{font-size:12px;color:#c6c7c0}.snapshot .value{font-size:clamp(28px,2.6vw,36px);color:#e5ca90;letter-spacing:-.025em;margin-top:10px;font-weight:700}.snapshot .note{font-size:10px;color:#9fa39e;margin-top:5px}
+.subsection-title{font-size:16px;color:#f1eee5;margin:25px 0 4px;letter-spacing:-.01em}.analysis-note{font-size:11px;color:#9fa49e;margin:0 0 14px}
+.kpis{grid-template-columns:minmax(240px,360px);margin:14px 0}
+.kpi{min-height:112px;border-color:#373126;border-radius:14px;padding:17px;background:linear-gradient(140deg,#151917,#0c100f);box-shadow:0 8px 22px rgba(0,0,0,.1)}
+.kpiicon{background:#29251a;border-color:#4b412a;color:#ddc58f}
+.kpi .value{font-size:30px;color:#e4c98e}
+.sectiongrid{grid-template-columns:minmax(0,1fr);gap:14px}
+.panel{border-color:#302f28;border-radius:16px;background:linear-gradient(145deg,#121716,#0d1010);padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.10)}
+.panelhead{margin-bottom:16px}.panelhead h2{font-size:14px;color:#f0ece1}.panelhead p{font-size:11px;color:#a5aaa4}
+.emptychart{height:250px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 49px,#242a27 50px),repeating-linear-gradient(to right,transparent 0,transparent 65px,#1c2220 66px);border-color:#343a35}
+.monthrow{color:#888f89;padding:10px 6px 0}
+.bottomgrid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(270px,.8fr);gap:14px;margin-top:14px}
+.tablewrap{border:1px solid #292f2b;border-radius:10px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:12px}th{background:#171c1a;color:#d5c18f;font-weight:600}td,th{padding:12px 13px;border-bottom:1px solid #252b27;text-align:left}tbody tr:hover{background:#171c1a}
+.recentlist{display:grid;gap:8px}.recent{background:#141917;border:1px solid #272e29;border-radius:10px;padding:12px;display:grid;grid-template-columns:28px 1fr;gap:7px 9px}.recent b{grid-column:2;color:#e0c486;font-size:13px}
+.count{display:none!important}#rowCount{display:none!important}
+@media(max-width:1100px){.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{grid-column:span 2;grid-template-columns:1fr 1fr}.bottomgrid{grid-template-columns:1fr}}
+@media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{padding:12px;gap:12px}.brand{padding-bottom:12px}.nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.nav button{justify-content:center;padding:9px 5px;font-size:10px;gap:5px}.sidebottom{display:none}.hero{min-height:125px;padding:20px 16px}.updated{min-width:0;padding:9px}.content{padding:14px 12px 24px}.toolbar{grid-template-columns:1fr 1fr;padding:9px}.actions{grid-column:span 2}.snapshots{grid-template-columns:1fr;gap:9px}.snapshot{padding:15px 17px}.snapshot .value{font-size:29px}.snapshothead{align-items:flex-start;flex-direction:column}.snapshotdate{white-space:normal}.kpis{grid-template-columns:1fr}.sectiongrid{grid-template-columns:1fr}.emptychart{height:210px}.monthrow span:nth-child(even){display:none}.bottomgrid{grid-template-columns:1fr}}
 </style></head>
 <body><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
 <nav class="nav" aria-label="Main navigation"><button class="active" data-page="Overview"><span class="ico">⌂</span>Overview</button><button data-page="Downloads & Events"><span class="ico">⇩</span>Downloads &amp; Events</button><button data-page="Countries"><span class="ico">◎</span>Countries</button><button data-page="Apps Comparison"><span class="ico">▦</span>Apps Comparison</button><button data-page="User Activity"><span class="ico">♙</span>User Activity</button><button data-page="Reports & Export"><span class="ico">▤</span>Reports &amp; Export</button></nav>
 <div class="sidebottom"><div class="lang"><span>◉ Language</span><select id="language" aria-label="Language"><option value="en" selected>English</option><option value="ar">العربية</option></select></div><small>Hidaya Main App</small></div></aside>
-<div class="main"><header class="hero"><div><div class="eyebrow">PRODUCT ANALYTICS · MAIN APP</div><h1>Hidaya Analytics</h1><p>Discover insights across your users’ journey.</p></div><div class="updated"><span class="ico">◷</span><div><small>Last Updated</small><b>N/A</b></div></div></header>
+<div class="main"><header class="hero"><div><div class="eyebrow">PRODUCT ANALYTICS · MAIN APP</div><h1>Hidaya Analytics</h1><p>Discover insights across your users’ journey.</p></div><div class="updated"><span class="ico">◷</span><div><small>Source Data Through</small><b>09 Oct 2026</b></div></div></header>
 <main class="content"><section class="toolbar" aria-label="Dashboard filters">
 <div class="filter"><label for="platform"><span>▣</span>Platform</label><select id="platform"><option value="all" selected>All platforms</option><option>Android</option><option>iOS</option></select></div>
 <div class="filter"><label for="metric"><span>▥</span>Metric</label><select id="metric" aria-label="Metric" multiple size="5" title="Multi-select metrics" style="display:none">
@@ -78,12 +122,12 @@
 </div></section>
 <h2 class="subsection-title">Performance Insights</h2><p class="analysis-note">Track the selected metric over time. Values follow the original platform metric definitions.</p>
 <section class="kpis">
-<article class="kpi"><div class="kpihead"><div class="kpiicon">Σ</div><div><label id="kpi1label">Selected Metric Value</label><div class="note">Based on active filters · not unique users</div></div></div><div class="value" id="kpi1">N/A</div></article>
+<article class="kpi"><div class="kpihead"><div class="kpiicon">Σ</div><div><label id="kpi1label">Selected Metric Value</label><div class="note">Based on the selected metric and period</div></div></div><div class="value" id="kpi1">N/A</div></article>
 <article class="kpi"><div class="kpihead"><div class="kpiicon">▤</div><div><label>Matching Source Records</label><div class="note">Rows in source data</div></div></div><div class="value" id="kpi2">0</div></article>
 <article class="kpi"><div class="kpihead"><div class="kpiicon">▣</div><div><label>Android Records</label><div class="note">Google Play Console · Hidaya</div></div></div><div class="value" id="kpi3">0</div></article>
 <article class="kpi"><div class="kpihead"><div class="kpiicon">◉</div><div><label>iOS Records</label><div class="note">App Store Connect · Quran Hidaya</div></div></div><div class="value" id="kpi4">0</div></article>
 </section>
-<section class="sectiongrid"><article class="panel"><div class="panelhead"><div><h2>Selected Metric Trend</h2><p>Monthly trend by platform · snapshot metrics use latest value</p></div><div class="legend"><span><i class="dot gold"></i>Android</span><span><i class="dot silver"></i>iOS</span></div></div><div class="emptychart" id="chartArea" style="display:block;padding:8px"><canvas id="trendCanvas" style="width:100%;height:190px;display:block"></canvas><div class="emptymsg" id="chartHint" style="display:none"><b>Select a specific metric to display its trend</b></div></div><div class="monthrow"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span></div></article>
+<section class="sectiongrid"><article class="panel"><div class="panelhead"><div><h2>Selected Metric Trend</h2><p>Compare monthly performance by platform</p></div><div class="legend"><span><i class="dot gold"></i>Android</span><span><i class="dot silver"></i>iOS</span></div></div><div class="emptychart" id="chartArea" style="display:block;padding:8px"><canvas id="trendCanvas" style="width:100%;height:190px;display:block"></canvas><div class="emptymsg" id="chartHint" style="display:none"><b>Select a specific metric to display its trend</b></div></div><div class="monthrow"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span></div></article>
 <article class="panel"><div class="panelhead"><div><h2>Platform Distribution</h2><p>Source records by platform (not downloads)</p></div></div><div class="distribution"><div class="donut" id="donut"><span id="donutTotal">0<small>Records</small></span></div></div><div class="platformlist"><div><span><i class="dot gold"></i>Android</span><b id="distAndroid">0</b><span id="distAndroidPct">0%</span></div><div><span><i class="dot silver"></i>iOS</span><b id="distIOS">0</b><span id="distIOSPct">0%</span></div></div></article>
 <article class="panel countrypanel"><div class="panelhead"><div><h2>Top Countries</h2><p>Ranked by selected metric</p></div><span class="eyebrow">VIEW ALL →</span></div><div class="countrylist"><div class="country"><span class="rank">—</span><span>Country-level data is not in source</span><span>N/A</span></div></div></article></section>
 <section class="bottomgrid"><article class="panel"><div class="panelhead"><div><h2>Detailed Results</h2><p>Based on selected filters</p></div><div class="tabletools"><button class="btn secondary" id="export">⇩ Export CSV</button><span class="count" id="rowCount">0 rows</span></div></div><div class="tablewrap"><table><thead><tr><th>Platform</th><th>App</th><th>Metric</th><th>Year-Month</th><th>Value</th></tr></thead><tbody id="results"><tr class="emptyrow"><td colspan="5"><strong>Loading source data…</strong></td></tr></tbody></table></div></article>
