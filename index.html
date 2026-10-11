@@ -30,6 +30,14 @@
 .metrichelp{font-size:10px;color:#a6a8a6;margin-top:7px}
 .filter:has(#metric)::after{content:none}
 @media(max-width:900px){.metricpickmenu{max-height:240px}}
+
+/* Executive view: hide operational record-count widgets */
+.kpis .kpi:nth-child(n+2){display:none!important}
+.sectiongrid > .panel:nth-child(2), .sectiongrid > .countrypanel{display:none!important}
+#rowCount{display:none!important}
+.kpis{grid-template-columns:minmax(240px,1fr)}
+.sectiongrid{grid-template-columns:minmax(0,1fr)}
+.bottomgrid{grid-template-columns:minmax(0,1fr)}
 </style></head>
 <body><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
@@ -68,7 +76,7 @@
 <article class="snapshot"><label>iOS · Unique devices</label><div class="value">7,500</div><div class="note">As reported in the snapshot workbook</div></article>
 <article class="snapshot"><label>Total · Android + iOS</label><div class="value">48,092</div><div class="note">Combined snapshot figure, not a sum of daily records</div></article>
 </div></section>
-<h2 class="subsection-title">Filtered Daily Metric Analysis</h2><p class="analysis-note">Use the filters below to analyze source records across All years or a selected period. Daily values are aggregated by metric definition; they are not unique-user totals.</p>
+<h2 class="subsection-title">Performance Insights</h2><p class="analysis-note">Track the selected metric over time. Values follow the original platform metric definitions.</p>
 <section class="kpis">
 <article class="kpi"><div class="kpihead"><div class="kpiicon">Σ</div><div><label id="kpi1label">Selected Metric Value</label><div class="note">Based on active filters · not unique users</div></div></div><div class="value" id="kpi1">N/A</div></article>
 <article class="kpi"><div class="kpihead"><div class="kpiicon">▤</div><div><label>Matching Source Records</label><div class="note">Rows in source data</div></div></div><div class="value" id="kpi2">0</div></article>
