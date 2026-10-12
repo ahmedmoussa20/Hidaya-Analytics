@@ -317,10 +317,21 @@ function buildMetricPicker(){
  all.querySelector('input').addEventListener('change',e=>{metricSelect.value='all';syncMetricPickerChecks();});
  syncMetricPickerChecks();
 }
+function syncMetricSelectFromPicker(){
+ const checked=[...metricPickerMenu.querySelectorAll('input[data-value]:checked')].map(cb=>cb.dataset.value);
+ const picked=checked.filter(v=>v!=='all');
+ [...metricSelect.options].forEach(o=>{o.selected=picked.length?picked.includes(o.value):o.value==='all';});
+}
 function syncMetricPickerChecks(){
  const selected=[...metricSelect.selectedOptions].filter(o=>o.value!=='all');
- metricPickerMenu.querySelectorAll('input[data-value]').forEach(cb=>{const v=cb.dataset.value;cb.checked=v==='all'?selected.length===0:selected.some(o=>o.value===v);const opt=[...metricSelect.options].find(o=>o.value===v);cb.closest('label').style.display=opt&&(opt.hidden||opt.disabled)?'none':'';});
- metricPickerToggle.innerHTML=(selected.length?selected.length+' metrics selected':'All metrics')+' <span>⌄</span>';
+ metricPickerMenu.querySelectorAll('input[data-value]').forEach(cb=>{
+   const v=cb.dataset.value;
+   cb.checked=v==='all'?selected.length===0:selected.some(o=>o.value===v);
+   const opt=[...metricSelect.options].find(o=>o.value===v);
+   cb.closest('label').style.display=opt&&(opt.hidden||opt.disabled)?'none':'';
+ });
+ metricPickerToggle.textContent=selected.length?selected.length+' metrics selected':'All metrics';
+ const arrow=document.createElement('span');arrow.textContent='⌄';metricPickerToggle.appendChild(arrow);
 }
 metricPickerToggle.addEventListener('click',()=>{metricPickerMenu.hidden=!metricPickerMenu.hidden;});
 document.addEventListener('click',e=>{if(!$('metricPicker').contains(e.target))metricPickerMenu.hidden=true;});
@@ -446,9 +457,13 @@ function applyFilters(){
  applied.app=$('appFilter').value;
  document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · '+(applied.app==='Hidaya KSA'?'HIDAYA KSA':'HIDAYA MAIN');
  applied.platform=$('platform').value; applied.year=$('year').value; applied.month=$('month').value;
+ // Read the visible custom-picker checkboxes first, then mirror them to the native select.
+ // This avoids stale selectedOptions values from the hidden multi-select control.
+ syncMetricSelectFromPicker();
  syncMetricOptions();
- const picked=[...$('metric').selectedOptions].map(o=>o.value).filter(v=>v!=='all');
- applied.metrics=picked; applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');
+ const picked=[...metricPickerMenu.querySelectorAll('input[data-value]:checked')].map(cb=>cb.dataset.value).filter(v=>v!=='all');
+ const visiblePicked=picked.filter(v=>{const o=[...metricSelect.options].find(opt=>opt.value===v);return o&&!o.hidden&&!o.disabled;});
+ applied.metrics=visiblePicked; applied.metric=visiblePicked.length===1?visiblePicked[0]:(visiblePicked.length?'multiple':'all');
  render();
 }
 $('apply').addEventListener('click',applyFilters);$('appFilter').addEventListener('change',applyFilters);
