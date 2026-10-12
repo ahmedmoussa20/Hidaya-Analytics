@@ -240,6 +240,28 @@ button,select{touch-action:manipulation}
   .emptychart{height:185px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Mobile refinement: prevent horizontal overflow and keep controls readable */
+@media (max-width: 700px) {
+  html, body { width: 100%; max-width: 100%; overflow-x: clip; }
+  .app, .main, .content { min-width: 0; max-width: 100%; }
+  .toolbar, .filter, .snapshot, .kpi, .panel { min-width: 0; }
+  .filter label, .panelhead h2 { min-width: 0; overflow-wrap: anywhere; }
+  .filter select, .metricpickbtn { width: 100%; min-width: 0; max-width: 100%; }
+  .metricpickmenu { left: 0; right: 0; width: auto; max-width: calc(100vw - 24px); }
+  .snapshot .value, .kpi .value { overflow-wrap: anywhere; word-break: normal; }
+  .legend { min-width: 0; white-space: normal; }
+  .tablewrap { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+}
+@media (max-width: 430px) {
+  .toolbar { grid-template-columns: minmax(0, 1fr); }
+  .actions { grid-column: 1; grid-template-columns: minmax(0, 1fr); }
+  .actions .btn, .actions .btn:first-child { grid-column: auto; width: 100%; }
+  .snapshot .value, .kpi .value { font-size: clamp(20px, 6vw, 26px); }
+  .filter select, .metricpickbtn { min-height: 42px; }
+  .panelhead { gap: 8px; }
+}
+
 </style></head>
 <body><div class="app">
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
