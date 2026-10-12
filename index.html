@@ -350,7 +350,7 @@ function fmt(v){return Number(v).toLocaleString('en-US',{maximumFractionDigits:2
 function filtered(){
  return DATA.filter(r=>{
    const d=r[0], y=d.slice(0,4), m=String(Number(d.slice(5,7)));
-   return (applied.app==='Hidaya' ? r[2]!=='Hidaya KSA' : r[2]===applied.app) && (applied.platform==='all'||r[1]===applied.platform) &&
+   return r[2]===applied.app && (applied.platform==='all'||r[1]===applied.platform) &&
      (applied.metrics.length ? applied.metrics.includes(r[3]) : (applied.metric==='all'||r[3]===applied.metric)) &&
      (applied.year==='all'||y===applied.year) &&
      (applied.month==='all'||m===String(months.indexOf(applied.month)+1));
