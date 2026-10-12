@@ -315,7 +315,7 @@ function buildMetricPicker(){
      cb.addEventListener('change',()=>{opt.selected=cb.checked;const allOpt=[...metricSelect.options].find(o=>o.value==='all');if(allOpt)allOpt.selected=false;syncMetricPickerChecks();});
    });
  });
- all.querySelector('input').addEventListener('change',e=>{metricSelect.value='all';syncMetricPickerChecks();});
+ all.querySelector('input').addEventListener('change',e=>{[...metricSelect.options].forEach(opt=>{opt.selected=opt.value==='all'&&e.target.checked;});syncMetricPickerChecks();});
  syncMetricPickerChecks();
 }
 function syncMetricPickerChecks(){
@@ -426,7 +426,7 @@ function render(){
  $('latestActive').textContent=la?fmt(la[4])+' · '+la[0]:'N/A';
  $('latestRedownload').textContent=lr?fmt(lr[4])+' · '+lr[0]:'N/A';
 }
-$('apply').addEventListener('click',()=>{applied.app=$('appFilter').value;const appLabel=applied.app==='all'?'MULTI-APP':applied.app.toUpperCase();document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · '+appLabel;document.querySelector('.snapshothead p').textContent=applied.app==='Hidaya KSA'?'Hidaya KSA · Google Play daily metrics + App Store Connect period totals':'Hidaya Main App · unique users on Android + unique devices on iOS';document.querySelector('.snapshots').style.display=applied.app==='Hidaya KSA'?'none':'grid';applied.platform=$('platform').value;applied.year=$('year').value;applied.month=$('month').value;const picked=[...$('metric').selectedOptions].map(o=>o.value).filter(v=>v!=='all');applied.metrics=picked;applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');render();});
+function applyFilters(){applied.app=$('appFilter').value;const appLabel=applied.app==='all'?'MULTI-APP':applied.app.toUpperCase();document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · '+appLabel;document.querySelector('.snapshothead p').textContent=applied.app==='Hidaya KSA'?'Hidaya KSA · Google Play daily metrics + App Store Connect period totals':'Hidaya Main App · unique users on Android + unique devices on iOS';document.querySelector('.snapshots').style.display=applied.app==='Hidaya KSA'?'none':'grid';applied.platform=$('platform').value;applied.year=$('year').value;applied.month=$('month').value;const picked=[...$('metric').selectedOptions].filter(o=>o.value!=='all'&&!o.disabled).map(o=>o.value);applied.metrics=picked;applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');render();} $('apply').addEventListener('click',applyFilters); $('appFilter').addEventListener('change',applyFilters);
 $('reset').addEventListener('click',()=>{document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · MAIN APP';document.querySelector('.snapshothead p').textContent='Hidaya Main App · unique users on Android + unique devices on iOS';document.querySelector('.snapshots').style.display='grid';for(const id of ['appFilter','platform','year','month'])$(id).value='all';[...$('metric').options].forEach(o=>o.selected=o.value==='all');applied={app:'all',platform:'all',metric:'all',metrics:[],year:'all',month:'all'};syncMetricOptions();syncMetricPickerChecks();render();});
 $('export').addEventListener('click',()=>{
  const rows=filtered(), aggr=new Map();
