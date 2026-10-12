@@ -252,7 +252,7 @@ button,select{touch-action:manipulation}
 <div class="filter"><label for="metric"><span>▥</span>Metric</label><select id="metric" aria-label="Metric" multiple size="5" title="Multi-select metrics" style="display:none">
 <option value="all" selected>All metrics</option>
 <optgroup label="Device Downloads">
-<option value="Device Downloads" data-platform="all" title="Android Daily Device Installs + iOS Total Downloads; no extra Redownloads are added">Device Downloads · Android + iOS</option>
+<option value="Device Downloads" data-platform="combined" title="Android Daily Device Installs + iOS Total Downloads; no extra Redownloads are added">Device Downloads · Android + iOS</option>
 </optgroup>
 <optgroup label="Android · Google Play Console">
 <option value="Daily Device Installs" data-platform="Android" title="Google Play Console daily device installs">Daily Device Installs</option>
@@ -330,6 +330,7 @@ function buildMetricPicker(){
          if(!any && allOpt) allOpt.selected=true;
        }
        syncMetricPickerChecks();
+       applyFilters();
      });
    });
  });
@@ -341,6 +342,7 @@ function buildMetricPicker(){
      if(!picked){const allOpt=[...metricSelect.options].find(o=>o.value==='all');if(allOpt)allOpt.selected=true;}
    }
    syncMetricPickerChecks();
+   applyFilters();
  });
  syncMetricPickerChecks();
 }
@@ -377,7 +379,7 @@ function syncMetricOptions(){
  const platform=$('platform').value;
  metricOptions.forEach(o=>{
    const p=o.dataset.platform;
-   const show=p==='all'||platform==='all'||p===platform;
+   const show=p==='combined'?platform==='all':(p==='all'||platform==='all'||p===platform);
    o.hidden=!show; o.disabled=!show;
  });
  metricGroups.forEach(g=>{
@@ -394,7 +396,9 @@ function syncMetricOptions(){
  if(allOpt) allOpt.selected=!hasPicked;
  syncMetricPickerChecks();
 }
-$('platform').addEventListener('change',syncMetricOptions);
+$('platform').addEventListener('change',()=>{syncMetricOptions();applyFilters();});
+$('year').addEventListener('change',applyFilters);
+$('month').addEventListener('change',applyFilters);
 syncMetricOptions();
 function fmt(v){return Number(v).toLocaleString('en-US',{maximumFractionDigits:2});}
 function filtered(){
@@ -463,7 +467,7 @@ function drawChart(rows){
 }
 function render(){
  const rows=filtered(), android=rows.filter(r=>r[1]==='Android'), ios=rows.filter(r=>r[1]==='iOS');
- $('kpi1label').textContent=applied.metric==='all'?'Select a Metric':applied.metric==='multiple'?'Multiple metrics · records only':applied.metric==='Active Device Installs'?'Latest Active Device Installs':'Filtered Metric Sum';
+ $('kpi1label').textContent=applied.metric==='all'?'Select a Metric':applied.metric==='multiple'?'Multiple metrics · records only':applied.metric==='Active Device Installs'?'Latest Active Device Installs':applied.metric==='Device Downloads'?'Device Downloads Total':'Filtered Metric Sum';
  $('kpi1').textContent=applied.metric==='multiple'?'N/A':metricValue(rows,applied.metric);
  $('kpi2').textContent=fmt(rows.length); $('kpi3').textContent=fmt(android.length); $('kpi4').textContent=fmt(ios.length);
  const total=rows.length, ap=total?android.length/total*100:0, ip=total?ios.length/total*100:0;
@@ -485,7 +489,7 @@ function render(){
  $('latestInstall').textContent=li?fmt(li[4])+' · '+li[0]:'N/A';
  $('latestActive').textContent=la?fmt(la[4])+' · '+la[0]:'N/A';
  $('latestRedownload').textContent=lr?fmt(lr[4])+' · '+lr[0]:'N/A';
- const deviceBase=DATA.filter(r=>r[3]==='Device Downloads'&&r[2]===applied.app&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1));
+ const deviceBase=DATA.filter(r=>r[3]==='Device Downloads'&&r[2]===applied.app&&(applied.platform==='all'||r[1]===applied.platform)&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1));
  const sumPlatform=p=>deviceBase.filter(r=>r[1]===p).reduce((sum,r)=>sum+(Number(r[4])||0),0);
  // Source rows are daily records; iOS Total Downloads already includes redownloads.
  const androidDevice=sumPlatform('Android'),iosDevice=sumPlatform('iOS');
