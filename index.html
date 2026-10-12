@@ -245,34 +245,31 @@ button,select{touch-action:manipulation}
 <aside class="sidebar"><div class="brand"><div class="brandmark">ه</div><div><strong>HIDAYA</strong><small>ANALYTICS</small></div></div>
 <nav class="nav" aria-label="Main navigation"><button class="active" data-page="Overview"><span class="ico">⌂</span>Overview</button><button data-page="Downloads & Events"><span class="ico">⇩</span>Downloads &amp; Events</button><button data-page="Countries"><span class="ico">◎</span>Countries</button><button data-page="Apps Comparison"><span class="ico">▦</span>Apps Comparison</button><button data-page="User Activity"><span class="ico">♙</span>User Activity</button><button data-page="Reports & Export"><span class="ico">▤</span>Reports &amp; Export</button></nav>
 <div class="sidebottom"><div class="lang"><span>◉ Language</span><select id="language" aria-label="Language"><option value="en" selected>English</option><option value="ar">العربية</option></select></div><small>Hidaya Main App</small></div></aside>
-<div class="main"><header class="hero"><div><div class="eyebrow">PRODUCT ANALYTICS · MAIN APP</div><h1>Hidaya Analytics</h1><p>Discover insights across your users’ journey.</p></div><div class="updated"><span class="ico">◷</span><div><small>Source Data Through</small><b>09 Oct 2026</b></div></div></header>
+<div class="main"><header class="hero"><div><div class="eyebrow">PRODUCT ANALYTICS · MAIN APP</div><h1>Hidaya Analytics</h1><p>Discover insights across your users’ journey.</p></div><div class="updated"><span class="ico">◷</span><div><small>Source Data Through</small><b>10 Oct 2026</b></div></div></header>
 <main class="content"><section class="toolbar" aria-label="Dashboard filters">
 <div class="filter"><label for="appFilter"><span>▣</span>Application</label><select id="appFilter" aria-label="Choose application"><option value="Hidaya" selected>Hidaya Main</option><option value="Hidaya KSA">Hidaya KSA</option></select></div>
 <div class="filter"><label for="platform"><span>▣</span>Platform</label><select id="platform"><option value="all" selected>All platforms</option><option>Android</option><option>iOS</option></select></div>
 <div class="filter"><label for="metric"><span>▥</span>Metric</label><select id="metric" aria-label="Metric" multiple size="5" title="Multi-select metrics" style="display:none">
 <option value="all" selected>All metrics</option>
+<optgroup label="Device Downloads">
+<option value="Device Downloads" data-platform="all" title="Android Daily Device Installs + iOS Total Downloads; no extra Redownloads are added">Device Downloads · Android + iOS</option>
+</optgroup>
 <optgroup label="Android · Google Play Console">
-<option value="Daily Device Installs" data-platform="Android" title="Google Play Console metric">Daily Device Installs</option>
+<option value="Daily Device Installs" data-platform="Android" title="Google Play Console daily device installs">Daily Device Installs</option>
+<option value="Active Device Installs" data-platform="Android" title="Snapshot; latest value, not a sum">Active Device Installs</option>
 <option value="Daily Device Uninstalls" data-platform="Android" title="Google Play Console metric">Daily Device Uninstalls</option>
 <option value="Daily Device Upgrades" data-platform="Android" title="Google Play Console metric">Daily Device Upgrades</option>
-<option value="Device Downloads" data-platform="Android" title="Android: Daily Device Installs; iOS: Total Downloads including redownloads">Device Downloads · Android + iOS</option>
-<option value="Daily User Installs" data-platform="Android" title="Google Play Console metric">Daily User Installs</option>
-<option value="Daily User Uninstalls" data-platform="Android" title="Google Play Console metric">Daily User Uninstalls</option>
-<option value="Active Device Installs" data-platform="Android" title="Google Play Console metric">Active Device Installs</option>
-<option value="Install events" data-platform="Android" title="Google Play Console metric">Install events</option>
-<option value="Update events" data-platform="Android" title="Google Play Console metric">Update events</option>
-<option value="Uninstall events" data-platform="Android" title="Google Play Console metric">Uninstall events</option>
 </optgroup>
 <optgroup label="iOS · App Store Connect">
+<option value="Total Downloads" data-platform="iOS" title="Daily downloads including redownloads; do not add Redownloads again">Total Downloads</option>
 <option value="First-Time Downloads" data-platform="iOS" title="App Store Connect metric">First-Time Downloads</option>
-<option value="Total Downloads" data-platform="iOS" title="App Store Connect metric; includes redownloads">Total Downloads</option>
-<option value="Redownloads" data-platform="iOS" title="App Store Connect metric">Redownloads</option>
+<option value="Redownloads" data-platform="iOS" title="Already included in Total Downloads">Redownloads</option>
 </optgroup>
 </select><div class="metricpicker" id="metricPicker"><button type="button" id="metricPickerToggle" class="metricpickbtn">All metrics <span>⌄</span></button><div id="metricPickerMenu" class="metricpickmenu" hidden></div></div></div>
 <div class="filter"><label for="year"><span>▦</span>Year</label><select id="year"><option value="all" selected>All years</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div>
 <div class="filter"><label for="month"><span>▦</span>Month</label><select id="month"><option value="all" selected>All months</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></div>
 <div class="actions"><button class="btn" id="apply">⌕ &nbsp; Apply Filters</button><button class="btn secondary" id="reset">↻ &nbsp; Reset Filters</button></div></section>
-<section aria-label="Device downloads summary"><div class="snapshothead"><div><h2>Device Downloads</h2><p>Android: Daily Device Installs · Google Play Console | iOS: Total Downloads (includes redownloads) · App Store Connect</p></div><span class="snapshotdate" id="devicePeriod">Selected app · selected period</span></div><div class="snapshots"><article class="snapshot"><label>Android · Device Downloads</label><div class="value" id="deviceAndroid">—</div><div class="note">Source: Google Play Console · Daily Device Installs</div></article><article class="snapshot"><label>iOS · Device Downloads</label><div class="value" id="deviceIOS">—</div><div class="note">Source: App Store Connect · Total Downloads (includes redownloads)</div></article><article class="snapshot"><label>Total · Android + iOS</label><div class="value" id="deviceTotal">—</div><div class="note">Sum of the two platform values shown above</div></article></div></section>
+<section aria-label="Device downloads summary"><div class="snapshothead"><div><h2>Device Downloads</h2><p>Device Downloads = Android Daily Device Installs + iOS Total Downloads (includes redownloads; do not add Redownloads again). Sources: Google Play Console and App Store Connect.</p></div><span class="snapshotdate" id="devicePeriod">Selected app · selected period</span></div><div class="snapshots"><article class="snapshot"><label>Android · Device Downloads</label><div class="value" id="deviceAndroid">—</div><div class="note">Source: Google Play Console · Daily Device Installs</div></article><article class="snapshot"><label>iOS · Device Downloads</label><div class="value" id="deviceIOS">—</div><div class="note">Source: App Store Connect · Total Downloads (includes redownloads)</div></article><article class="snapshot"><label>Total · Android + iOS</label><div class="value" id="deviceTotal">—</div><div class="note">Sum of the two platform values shown above</div></article></div></section>
 <h2 class="subsection-title">Performance Insights</h2><p class="analysis-note">Track the selected metric over time. Values follow the original platform metric definitions.</p>
 <section class="kpis">
 <article class="kpi"><div class="kpihead"><div class="kpiicon">Σ</div><div><label id="kpi1label">Selected Metric Value</label><div class="note">Based on the selected metric and period</div></div></div><div class="value" id="kpi1">N/A</div></article>
@@ -298,7 +295,6 @@ $('year').innerHTML='<option value="all" selected>All years</option>'+years.map(
 const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const metricSelect=$('metric');
 const metricOptions=[...metricSelect.querySelectorAll('option[data-platform]')];
-[...metricSelect.options].forEach(o=>{if(o.value==='Total User Installs')o.remove();});
 const metricGroups=[...metricSelect.querySelectorAll('optgroup')];
 let applied={app:'Hidaya',platform:'all',metric:'all',metrics:[],year:'all',month:'all'};
 
@@ -331,11 +327,23 @@ document.addEventListener('click',e=>{if(!$('metricPicker').contains(e.target))m
 
 function syncMetricOptions(){
   const platform=$('platform').value;
-  metricOptions.forEach(o=>{const show=platform==='all'||o.dataset.platform===platform;o.hidden=!show;o.disabled=!show;});
-  metricGroups.forEach(g=>{g.hidden=platform!=='all' && g.label.startsWith(platform==='Android'?'iOS':'Android');});
+  metricOptions.forEach(o=>{
+    const metricPlatform=o.dataset.platform;
+    const show=metricPlatform==='all'||platform==='all'||metricPlatform===platform;
+    o.hidden=!show; o.disabled=!show;
+  });
+  metricGroups.forEach(g=>{
+    const isIOS=g.label.startsWith('iOS'), isAndroid=g.label.startsWith('Android');
+    g.hidden=(platform==='Android'&&isIOS)||(platform==='iOS'&&isAndroid);
+  });
   const selected=[...metricSelect.selectedOptions].filter(o=>o.value!=='all');
-  selected.forEach(o=>{if(o.dataset.platform && platform!=='all' && o.dataset.platform!==platform)o.selected=false;});
-  const allOpt=[...metricSelect.options].find(o=>o.value==='all'); if(allOpt)allOpt.selected=selected.length===0; syncMetricPickerChecks();
+  selected.forEach(o=>{
+    const p=o.dataset.platform;
+    if(p && p!=='all' && platform!=='all' && p!==platform)o.selected=false;
+  });
+  const allOpt=[...metricSelect.options].find(o=>o.value==='all');
+  if(allOpt)allOpt.selected=selected.length===0;
+  syncMetricPickerChecks();
 }
 $('platform').addEventListener('change',syncMetricOptions); syncMetricOptions();
 function fmt(v){return Number(v).toLocaleString('en-US',{maximumFractionDigits:2});}
@@ -352,12 +360,11 @@ function metricValue(rows, metric){
  if(metric==='all') return 'N/A';
  const matching=rows.filter(r=>r[3]===metric && r[4]!==null);
  if(!matching.length) return 'N/A';
- // Active Device Installs is a snapshot, so show the latest value rather than summing daily snapshots.
  if(metric==='Active Device Installs'){
    matching.sort((a,b)=>a[0].localeCompare(b[0]));
    return fmt(matching[matching.length-1][4])+'*';
  }
- return fmt(matching.reduce((s,r)=>s+r[4],0));
+ return fmt(matching.reduce((sum,r)=>sum+(Number(r[4])||0),0));
 }
 function drawChart(rows){
  const canvas=$('trendCanvas'), ctx=canvas.getContext('2d');
@@ -422,25 +429,34 @@ function render(){
  const display=out.slice(0,150);
  $('results').innerHTML=display.length?display.map(a=>`<tr><td>${a.platform}</td><td>${a.app}</td><td>${a.metric}</td><td>${a.ym}</td><td>${a.metric==='Active Device Installs'?fmt(a.lastValue)+'*':fmt(a.sum)}</td></tr>`).join(''):`<tr class="emptyrow"><td colspan="5"><strong>No matching source records</strong>Try changing the filters.</td></tr>`;
  if(out.length>150)$('results').insertAdjacentHTML('beforeend',`<tr><td colspan="5">Showing latest 150 of ${fmt(out.length)} monthly rows. Export CSV to get all matching monthly results.</td></tr>`);
- const latest=(metric,platform)=>DATA.filter(r=>r[3]===metric&&r[1]===platform&&(applied.app==='Hidaya'?r[2]!=='Hidaya KSA':r[2]===applied.app)&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1)).sort((a,b)=>b[0].localeCompare(a[0]))[0];
+ const latest=(metric,platform)=>DATA.filter(r=>r[3]===metric&&r[1]===platform&&r[2]===applied.app&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1)).sort((a,b)=>b[0].localeCompare(a[0]))[0];
  const ld=latest('Total Downloads','iOS'), li=latest('Daily Device Installs','Android'), la=latest('Active Device Installs','Android'), lr=latest('Redownloads','iOS');
  $('latestDownload').textContent=ld?fmt(ld[4])+' · '+ld[0]:'N/A';
  $('latestInstall').textContent=li?fmt(li[4])+' · '+li[0]:'N/A';
  $('latestActive').textContent=la?fmt(la[4])+' · '+la[0]:'N/A';
  $('latestRedownload').textContent=lr?fmt(lr[4])+' · '+lr[0]:'N/A';
- const deviceBase=DATA.filter(r=>r[3]==='Device Downloads'&&(applied.app==='Hidaya'?r[2]!=='Hidaya KSA':r[2]===applied.app)&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1));
- const sumPlatform=p=>deviceBase.filter(r=>r[1]===p).reduce((s,r)=>s+(Number(r[4])||0),0);
+ const deviceBase=DATA.filter(r=>r[3]==='Device Downloads'&&r[2]===applied.app&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1));
+ const sumPlatform=p=>deviceBase.filter(r=>r[1]===p).reduce((sum,r)=>sum+(Number(r[4])||0),0);
+ // Source rows are daily records; iOS Total Downloads already includes redownloads.
  const androidDevice=sumPlatform('Android'),iosDevice=sumPlatform('iOS');
  $('deviceAndroid').textContent=fmt(androidDevice);$('deviceIOS').textContent=fmt(iosDevice);$('deviceTotal').textContent=fmt(androidDevice+iosDevice);
  $('devicePeriod').textContent=(applied.app==='Hidaya'?'Hidaya Main':applied.app)+' · '+(applied.year==='all'?'All years':applied.year)+' · '+(applied.month==='all'?'All months':applied.month);
 }
-function applyFilters(){applied.app=$('appFilter').value;document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · '+(applied.app==='Hidaya KSA'?'HIDAYA KSA':'HIDAYA MAIN');applied.platform=$('platform').value;applied.year=$('year').value;applied.month=$('month').value;const picked=[...$('metric').selectedOptions].map(o=>o.value).filter(v=>v!=='all');applied.metrics=picked;applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');render();}
+function applyFilters(){
+ applied.app=$('appFilter').value;
+ document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · '+(applied.app==='Hidaya KSA'?'HIDAYA KSA':'HIDAYA MAIN');
+ applied.platform=$('platform').value; applied.year=$('year').value; applied.month=$('month').value;
+ syncMetricOptions();
+ const picked=[...$('metric').selectedOptions].map(o=>o.value).filter(v=>v!=='all');
+ applied.metrics=picked; applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');
+ render();
+}
 $('apply').addEventListener('click',applyFilters);$('appFilter').addEventListener('change',applyFilters);
 $('reset').addEventListener('click',()=>{$('appFilter').value='Hidaya';for(const id of ['platform','year','month'])$(id).value='all';[...$('metric').options].forEach(o=>o.selected=o.value==='all');applied={app:'Hidaya',platform:'all',metric:'all',metrics:[],year:'all',month:'all'};document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · HIDAYA MAIN';syncMetricOptions();syncMetricPickerChecks();render();});
 $('export').addEventListener('click',()=>{
  const rows=filtered(), aggr=new Map();
  rows.forEach(r=>{const key=[r[1],r[2],r[3],r[0].slice(0,7)].join('|');if(!aggr.has(key))aggr.set(key,{platform:r[1],app:r[2],metric:r[3],ym:r[0].slice(0,7),sum:0,lastDate:r[0],lastValue:r[4]});const a=aggr.get(key);a.sum+=r[4]||0;if(r[0]>=a.lastDate){a.lastDate=r[0];a.lastValue=r[4];}});
- const csv=[['Platform','App','Metric','Year-Month','Value','Aggregation Note'],...[...aggr.values()].map(a=>[a.platform,a.app,a.metric,a.ym,a.metric==='Active Device Installs'?a.lastValue:a.sum,a.metric==='Active Device Installs'?'Latest daily snapshot; not summed':'Sum of source daily values'])].map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');
+ const csv=[['Platform','App','Metric','Year-Month','Value','Aggregation Note'],...[...aggr.values()].map(a=>[a.platform,a.app,a.metric,a.ym,a.metric==='Active Device Installs'?a.lastValue:a.sum,a.metric==='Active Device Installs'?'Latest daily snapshot; not summed':a.metric==='Total Downloads'?'Sum of daily downloads; includes redownloads':'Sum of source daily values'])].map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');
  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hidaya-analytics-filtered-results.csv';a.click();URL.revokeObjectURL(a.href);
 });
 $('language').addEventListener('change',e=>{if(e.target.value==='ar'){alert('Arabic localization is not implemented in this preview yet. English remains the default.');e.target.value='en';}});
