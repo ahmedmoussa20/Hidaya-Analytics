@@ -301,62 +301,101 @@ let applied={app:'Hidaya',platform:'all',metric:'all',metrics:[],year:'all',mont
 const metricPickerMenu=$('metricPickerMenu'), metricPickerToggle=$('metricPickerToggle');
 function buildMetricPicker(){
  metricPickerMenu.innerHTML='';
- const all=document.createElement('label');all.className='metricoption alloption';
+ const all=document.createElement('label');
+ all.className='metricoption alloption';
  all.innerHTML='<input type="checkbox" data-value="all"> All metrics';
  metricPickerMenu.appendChild(all);
  metricGroups.forEach(group=>{
-   const heading=document.createElement('div');heading.className='metricgroup';heading.textContent=group.label;metricPickerMenu.appendChild(heading);
+   const heading=document.createElement('div');
+   heading.className='metricgroup'; heading.textContent=group.label;
+   metricPickerMenu.appendChild(heading);
    [...group.querySelectorAll('option')].forEach(opt=>{
-     const row=document.createElement('label');row.className='metricoption';
-     const cb=document.createElement('input');cb.type='checkbox';cb.dataset.value=opt.value;cb.checked=opt.selected;
-     const label=document.createElement('span');label.textContent=opt.textContent;
-     row.append(cb,label);metricPickerMenu.appendChild(row);
-     cb.addEventListener('change',()=>{opt.selected=cb.checked;const allOpt=[...metricSelect.options].find(o=>o.value==='all');if(allOpt)allOpt.selected=false;syncMetricPickerChecks();});
+     const row=document.createElement('label'); row.className='metricoption';
+     const cb=document.createElement('input'); cb.type='checkbox'; cb.dataset.value=opt.value;
+     const label=document.createElement('span'); label.textContent=opt.textContent;
+     row.append(cb,label); metricPickerMenu.appendChild(row);
+     cb.addEventListener('change',()=>{
+       const allOpt=[...metricSelect.options].find(o=>o.value==='all');
+       if(opt.value==='all'){
+         if(cb.checked){
+           [...metricSelect.options].forEach(o=>o.selected=o.value==='all');
+         }else{
+           const picked=[...metricSelect.options].some(o=>o.selected&&o.value!=='all');
+           if(!picked && allOpt) allOpt.selected=true;
+         }
+       }else{
+         opt.selected=cb.checked;
+         if(cb.checked && allOpt) allOpt.selected=false;
+         const any=[...metricSelect.options].some(o=>o.selected&&o.value!=='all');
+         if(!any && allOpt) allOpt.selected=true;
+       }
+       syncMetricPickerChecks();
+     });
    });
  });
- all.querySelector('input').addEventListener('change',e=>{metricSelect.value='all';syncMetricPickerChecks();});
+ all.querySelector('input').addEventListener('change',e=>{
+   if(e.target.checked){
+     [...metricSelect.options].forEach(o=>o.selected=o.value==='all');
+   }else{
+     const picked=[...metricSelect.options].some(o=>o.selected&&o.value!=='all');
+     if(!picked){const allOpt=[...metricSelect.options].find(o=>o.value==='all');if(allOpt)allOpt.selected=true;}
+   }
+   syncMetricPickerChecks();
+ });
  syncMetricPickerChecks();
 }
 function syncMetricSelectFromPicker(){
- const checked=[...metricPickerMenu.querySelectorAll('input[data-value]:checked')].map(cb=>cb.dataset.value);
- const picked=checked.filter(v=>v!=='all');
+ const picked=[...metricPickerMenu.querySelectorAll('input[data-value]:checked')]
+   .map(cb=>cb.dataset.value).filter(v=>v!=='all')
+   .filter(v=>{const o=[...metricSelect.options].find(opt=>opt.value===v);return o&&!o.hidden&&!o.disabled;});
  [...metricSelect.options].forEach(o=>{o.selected=picked.length?picked.includes(o.value):o.value==='all';});
 }
 function syncMetricPickerChecks(){
  const selected=[...metricSelect.selectedOptions].filter(o=>o.value!=='all');
  metricPickerMenu.querySelectorAll('input[data-value]').forEach(cb=>{
-   const v=cb.dataset.value;
-   cb.checked=v==='all'?selected.length===0:selected.some(o=>o.value===v);
-   const opt=[...metricSelect.options].find(o=>o.value===v);
-   cb.closest('label').style.display=opt&&(opt.hidden||opt.disabled)?'none':'';
+   const value=cb.dataset.value;
+   cb.checked=value==='all'?selected.length===0:selected.some(o=>o.value===value);
+   const opt=[...metricSelect.options].find(o=>o.value===value);
+   const row=cb.closest('label');
+   if(row) row.style.display=value==='all'||(opt&&!opt.hidden&&!opt.disabled)?'':'none';
  });
- metricPickerToggle.textContent=selected.length?selected.length+' metrics selected':'All metrics';
- const arrow=document.createElement('span');arrow.textContent='⌄';metricPickerToggle.appendChild(arrow);
+ metricPickerToggle.replaceChildren(document.createTextNode(selected.length?selected.length+' metrics selected':'All metrics'));
+ const arrow=document.createElement('span'); arrow.textContent='⌄'; metricPickerToggle.appendChild(arrow);
 }
-metricPickerToggle.addEventListener('click',()=>{metricPickerMenu.hidden=!metricPickerMenu.hidden;});
-document.addEventListener('click',e=>{if(!$('metricPicker').contains(e.target))metricPickerMenu.hidden=true;});
-
+metricPickerToggle.addEventListener('click',()=>{
+ metricPickerMenu.hidden=!metricPickerMenu.hidden;
+ metricPickerToggle.setAttribute('aria-expanded',String(!metricPickerMenu.hidden));
+});
+metricPickerToggle.setAttribute('aria-expanded','false');
+document.addEventListener('click',e=>{
+ if(!$('metricPicker').contains(e.target)){
+   metricPickerMenu.hidden=true;
+   metricPickerToggle.setAttribute('aria-expanded','false');
+ }
+});
 function syncMetricOptions(){
-  const platform=$('platform').value;
-  metricOptions.forEach(o=>{
-    const metricPlatform=o.dataset.platform;
-    const show=metricPlatform==='all'||platform==='all'||metricPlatform===platform;
-    o.hidden=!show; o.disabled=!show;
-  });
-  metricGroups.forEach(g=>{
-    const isIOS=g.label.startsWith('iOS'), isAndroid=g.label.startsWith('Android');
-    g.hidden=(platform==='Android'&&isIOS)||(platform==='iOS'&&isAndroid);
-  });
-  const selected=[...metricSelect.selectedOptions].filter(o=>o.value!=='all');
-  selected.forEach(o=>{
-    const p=o.dataset.platform;
-    if(p && p!=='all' && platform!=='all' && p!==platform)o.selected=false;
-  });
-  const allOpt=[...metricSelect.options].find(o=>o.value==='all');
-  if(allOpt)allOpt.selected=selected.length===0;
-  syncMetricPickerChecks();
+ const platform=$('platform').value;
+ metricOptions.forEach(o=>{
+   const p=o.dataset.platform;
+   const show=p==='all'||platform==='all'||p===platform;
+   o.hidden=!show; o.disabled=!show;
+ });
+ metricGroups.forEach(g=>{
+   const isIOS=g.label.startsWith('iOS'), isAndroid=g.label.startsWith('Android');
+   g.hidden=(platform==='Android'&&isIOS)||(platform==='iOS'&&isAndroid);
+ });
+ [...metricSelect.options].forEach(o=>{
+   if(o.value==='all') return;
+   const p=o.dataset.platform;
+   if(o.selected && (o.hidden||o.disabled||(p&&p!=='all'&&platform!=='all'&&p!==platform))) o.selected=false;
+ });
+ const hasPicked=[...metricSelect.options].some(o=>o.selected&&o.value!=='all');
+ const allOpt=[...metricSelect.options].find(o=>o.value==='all');
+ if(allOpt) allOpt.selected=!hasPicked;
+ syncMetricPickerChecks();
 }
-$('platform').addEventListener('change',syncMetricOptions); syncMetricOptions();
+$('platform').addEventListener('change',syncMetricOptions);
+syncMetricOptions();
 function fmt(v){return Number(v).toLocaleString('en-US',{maximumFractionDigits:2});}
 function filtered(){
  return DATA.filter(r=>{
@@ -457,13 +496,12 @@ function applyFilters(){
  applied.app=$('appFilter').value;
  document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · '+(applied.app==='Hidaya KSA'?'HIDAYA KSA':'HIDAYA MAIN');
  applied.platform=$('platform').value; applied.year=$('year').value; applied.month=$('month').value;
- // Read the visible custom-picker checkboxes first, then mirror them to the native select.
- // This avoids stale selectedOptions values from the hidden multi-select control.
- syncMetricSelectFromPicker();
+ // Refresh platform availability first, then read checked metrics from the visible picker.
  syncMetricOptions();
- const picked=[...metricPickerMenu.querySelectorAll('input[data-value]:checked')].map(cb=>cb.dataset.value).filter(v=>v!=='all');
- const visiblePicked=picked.filter(v=>{const o=[...metricSelect.options].find(opt=>opt.value===v);return o&&!o.hidden&&!o.disabled;});
- applied.metrics=visiblePicked; applied.metric=visiblePicked.length===1?visiblePicked[0]:(visiblePicked.length?'multiple':'all');
+ syncMetricSelectFromPicker();
+ const picked=[...metricSelect.options].filter(o=>o.selected&&o.value!=='all'&&!o.hidden&&!o.disabled).map(o=>o.value);
+ applied.metrics=picked;
+ applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');
  render();
 }
 $('apply').addEventListener('click',applyFilters);$('appFilter').addEventListener('change',applyFilters);
