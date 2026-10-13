@@ -266,7 +266,7 @@ button,select{touch-action:manipulation}
 <option value="Redownloads" data-platform="iOS" title="Already included in Total Downloads">Redownloads</option>
 </optgroup>
 </select><div class="metricpicker" id="metricPicker"><button type="button" id="metricPickerToggle" class="metricpickbtn">All metrics <span>⌄</span></button><div id="metricPickerMenu" class="metricpickmenu" hidden></div></div></div>
-<div class="filter"><label for="year"><span>▦</span>Year</label><select id="year"><option value="all" selected>All years</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div>
+<div class="filter"><label for="year"><span>▦</span>Year</label><select id="year" multiple style="display:none"><option value="all" selected>All years</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select><div class="metricpicker" id="yearPicker"><button type="button" id="yearPickerToggle" class="metricpickbtn">All years <span>⌄</span></button><div id="yearPickerMenu" class="metricpickmenu" hidden></div></div></div>
 <div class="filter"><label for="month"><span>▦</span>Month</label><select id="month"><option value="all" selected>All months</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></div>
 <div class="actions"><button class="btn" id="apply">⌕ &nbsp; Apply Filters</button><button class="btn secondary" id="reset">↻ &nbsp; Reset Filters</button></div></section>
 <section aria-label="Device downloads summary"><div class="snapshothead"><div><h2>Device Downloads</h2><p>Device Downloads = Android Daily Device Installs + iOS Total Downloads (includes redownloads; do not add Redownloads again). Sources: Google Play Console and App Store Connect.</p></div><span class="snapshotdate" id="devicePeriod">Selected app · selected period</span></div><div class="snapshots"><article class="snapshot"><label>Android · Device Downloads</label><div class="value" id="deviceAndroid">—</div><div class="note">Source: Google Play Console · Daily Device Installs</div></article><article class="snapshot"><label>iOS · Device Downloads</label><div class="value" id="deviceIOS">—</div><div class="note">Source: App Store Connect · Total Downloads (includes redownloads)</div></article><article class="snapshot"><label>Total · Android + iOS</label><div class="value" id="deviceTotal">—</div><div class="note">Sum of the two platform values shown above</div></article></div></section>
@@ -313,42 +313,77 @@ function buildMetricPicker(){
      const label=document.createElement('span'); label.textContent=opt.textContent;
      row.append(cb,label); metricPickerMenu.appendChild(row);
      cb.addEventListener('change',()=>{
-       const allOpt=[...metricSelect.options].find(o=>o.value==='all');
-       if(opt.value==='all'){
-         if(cb.checked){
-           [...metricSelect.options].forEach(o=>o.selected=o.value==='all');
-         }else{
-           const picked=[...metricSelect.options].some(o=>o.selected&&o.value!=='all');
-           if(!picked && allOpt) allOpt.selected=true;
-         }
-       }else{
-         opt.selected=cb.checked;
-         if(cb.checked && allOpt) allOpt.selected=false;
-         const any=[...metricSelect.options].some(o=>o.selected&&o.value!=='all');
-         if(!any && allOpt) allOpt.selected=true;
-       }
+       // The checkbox list is the source of truth; sync the hidden select once.
+       syncMetricSelectFromPicker();
        syncMetricPickerChecks();
        applyFilters();
      });
    });
  });
- all.querySelector('input').addEventListener('change',e=>{
-   if(e.target.checked){
-     [...metricSelect.options].forEach(o=>o.selected=o.value==='all');
-   }else{
-     const picked=[...metricSelect.options].some(o=>o.selected&&o.value!=='all');
-     if(!picked){const allOpt=[...metricSelect.options].find(o=>o.value==='all');if(allOpt)allOpt.selected=true;}
-   }
+ all.querySelector('input').addEventListener('change',()=>{
+   // "All metrics" is exclusive; if cleared without a replacement, restore the all state.
+   syncMetricSelectFromPicker();
    syncMetricPickerChecks();
    applyFilters();
  });
  syncMetricPickerChecks();
 }
+const yearSelect=$('year'), yearPickerMenu=$('yearPickerMenu'), yearPickerToggle=$('yearPickerToggle');
+function buildYearPicker(){
+ yearPickerMenu.innerHTML='';
+ const all=document.createElement('label');
+ all.className='metricoption alloption';
+ all.innerHTML='<input type="checkbox" data-value="all"> All years';
+ yearPickerMenu.appendChild(all);
+ [...yearSelect.options].filter(o=>o.value!=='all').forEach(opt=>{
+   const row=document.createElement('label'); row.className='metricoption';
+   const cb=document.createElement('input'); cb.type='checkbox'; cb.dataset.value=opt.value;
+   const label=document.createElement('span'); label.textContent=opt.textContent;
+   row.append(cb,label); yearPickerMenu.appendChild(row);
+   cb.addEventListener('change',()=>{
+     syncYearSelectFromPicker();
+     syncYearPickerChecks();
+     applyFilters();
+   });
+ });
+ all.querySelector('input').addEventListener('change',()=>{
+   syncYearSelectFromPicker();
+   syncYearPickerChecks();
+   applyFilters();
+ });
+ syncYearPickerChecks();
+}
+function syncYearSelectFromPicker(){
+ const picked=[...yearPickerMenu.querySelectorAll('input[data-value]:checked')]
+   .map(cb=>cb.dataset.value).filter(v=>v!=='all');
+ [...yearSelect.options].forEach(o=>{o.selected=o.value==='all'?!picked.length:picked.includes(o.value);});
+ return picked;
+}
+function syncYearPickerChecks(){
+ const selected=[...yearSelect.selectedOptions].filter(o=>o.value!=='all').map(o=>o.value);
+ yearPickerMenu.querySelectorAll('input[data-value]').forEach(cb=>{
+   cb.checked=cb.dataset.value==='all'?!selected.length:selected.includes(cb.dataset.value);
+ });
+ yearPickerToggle.replaceChildren(document.createTextNode(selected.length?selected.join(', '):'All years'));
+ const arrow=document.createElement('span'); arrow.textContent='⌄'; yearPickerToggle.appendChild(arrow);
+}
+yearPickerToggle.addEventListener('click',()=>{
+ yearPickerMenu.hidden=!yearPickerMenu.hidden;
+ yearPickerToggle.setAttribute('aria-expanded',String(!yearPickerMenu.hidden));
+});
+yearPickerToggle.setAttribute('aria-expanded','false');
+document.addEventListener('click',e=>{
+ if(!$('yearPicker').contains(e.target)){
+   yearPickerMenu.hidden=true;
+   yearPickerToggle.setAttribute('aria-expanded','false');
+ }
+});
 function syncMetricSelectFromPicker(){
  const picked=[...metricPickerMenu.querySelectorAll('input[data-value]:checked')]
    .map(cb=>cb.dataset.value).filter(v=>v!=='all')
    .filter(v=>{const o=[...metricSelect.options].find(opt=>opt.value===v);return o&&!o.hidden&&!o.disabled;});
- [...metricSelect.options].forEach(o=>{o.selected=picked.length?picked.includes(o.value):o.value==='all';});
+ [...metricSelect.options].forEach(o=>{o.selected=o.value==='all'?!picked.length:picked.includes(o.value);});
+ return picked;
 }
 function syncMetricPickerChecks(){
  const selected=[...metricSelect.selectedOptions].filter(o=>o.value!=='all');
@@ -395,7 +430,7 @@ function syncMetricOptions(){
  syncMetricPickerChecks();
 }
 $('platform').addEventListener('change',()=>{syncMetricOptions();applyFilters();});
-$('year').addEventListener('change',applyFilters);
+$('year').addEventListener('change',()=>{syncYearPickerChecks();applyFilters();});
 $('month').addEventListener('change',applyFilters);
 syncMetricOptions();
 function fmt(v){return Number(v).toLocaleString('en-US',{maximumFractionDigits:2});}
@@ -404,7 +439,7 @@ function filtered(){
    const d=r[0], y=d.slice(0,4), m=String(Number(d.slice(5,7)));
    return r[2]===applied.app && (applied.platform==='all'||r[1]===applied.platform) &&
      (applied.metrics.length ? applied.metrics.includes(r[3]) : (applied.metric==='all'||r[3]===applied.metric)) &&
-     (applied.year==='all'||y===applied.year) &&
+     (applied.year==='all'||applied.year.split(',').includes(y)) &&
      (applied.month==='all'||m===String(months.indexOf(applied.month)+1));
  });
 }
@@ -481,33 +516,42 @@ function render(){
  const display=out.slice(0,150);
  $('results').innerHTML=display.length?display.map(a=>`<tr><td>${a.platform}</td><td>${a.app}</td><td>${a.metric}</td><td>${a.ym}</td><td>${a.metric==='Active Device Installs'?fmt(a.lastValue)+'*':fmt(a.sum)}</td></tr>`).join(''):`<tr class="emptyrow"><td colspan="5"><strong>No matching source records</strong>Try changing the filters.</td></tr>`;
  if(out.length>150)$('results').insertAdjacentHTML('beforeend',`<tr><td colspan="5">Showing latest 150 of ${fmt(out.length)} monthly rows. Export CSV to get all matching monthly results.</td></tr>`);
- const latest=(metric,platform)=>DATA.filter(r=>r[3]===metric&&r[1]===platform&&r[2]===applied.app&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1)).sort((a,b)=>b[0].localeCompare(a[0]))[0];
+ const latest=(metric,platform)=>DATA.filter(r=>r[3]===metric&&r[1]===platform&&r[2]===applied.app&&(applied.year==='all'||applied.year.split(',').includes(r[0].slice(0,4)))&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1)).sort((a,b)=>b[0].localeCompare(a[0]))[0];
  const ld=latest('Total Downloads','iOS'), li=latest('Daily Device Installs','Android'), la=latest('Active Device Installs','Android'), lr=latest('Redownloads','iOS');
  $('latestDownload').textContent=ld?fmt(ld[4])+' · '+ld[0]:'N/A';
  $('latestInstall').textContent=li?fmt(li[4])+' · '+li[0]:'N/A';
  $('latestActive').textContent=la?fmt(la[4])+' · '+la[0]:'N/A';
  $('latestRedownload').textContent=lr?fmt(lr[4])+' · '+lr[0]:'N/A';
- const deviceBase=DATA.filter(r=>r[3]==='Device Downloads'&&r[2]===applied.app&&(applied.platform==='all'||r[1]===applied.platform)&&(applied.year==='all'||r[0].slice(0,4)===applied.year)&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1));
+ const deviceBase=DATA.filter(r=>r[3]==='Device Downloads'&&r[2]===applied.app&&(applied.platform==='all'||r[1]===applied.platform)&&(applied.year==='all'||applied.year.split(',').includes(r[0].slice(0,4)))&&(applied.month==='all'||Number(r[0].slice(5,7))===months.indexOf(applied.month)+1));
  const sumPlatform=p=>deviceBase.filter(r=>r[1]===p).reduce((sum,r)=>sum+(Number(r[4])||0),0);
  // Source rows are daily records; iOS Total Downloads already includes redownloads.
  const androidDevice=sumPlatform('Android'),iosDevice=sumPlatform('iOS');
  $('deviceAndroid').textContent=fmt(androidDevice);$('deviceIOS').textContent=fmt(iosDevice);$('deviceTotal').textContent=fmt(androidDevice+iosDevice);
- $('devicePeriod').textContent=(applied.app==='Hidaya'?'Hidaya Main':applied.app)+' · '+(applied.year==='all'?'All years':applied.year)+' · '+(applied.month==='all'?'All months':applied.month);
+ $('devicePeriod').textContent=(applied.app==='Hidaya'?'Hidaya Main':applied.app)+' · '+(applied.year==='all'?'All years':applied.year.split(',').join(', '))+' · '+(applied.month==='all'?'All months':applied.month);
 }
 function applyFilters(){
  applied.app=$('appFilter').value;
  document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · '+(applied.app==='Hidaya KSA'?'HIDAYA KSA':'HIDAYA MAIN');
- applied.platform=$('platform').value; applied.year=$('year').value; applied.month=$('month').value;
- // Refresh platform availability first, then read checked metrics from the visible picker.
+ applied.platform=$('platform').value;
+ const selectedYears=syncYearSelectFromPicker();
+ applied.year=selectedYears.length?selectedYears.join(','):'all';
+ applied.month=$('month').value;
+ // Refresh metric availability first, then read checked metrics from the visible picker.
  syncMetricOptions();
- syncMetricSelectFromPicker();
- const picked=[...metricSelect.options].filter(o=>o.selected&&o.value!=='all'&&!o.hidden&&!o.disabled).map(o=>o.value);
+ const picked=syncMetricSelectFromPicker();
  applied.metrics=picked;
  applied.metric=picked.length===1?picked[0]:(picked.length?'multiple':'all');
  render();
 }
 $('apply').addEventListener('click',applyFilters);$('appFilter').addEventListener('change',applyFilters);
-$('reset').addEventListener('click',()=>{$('appFilter').value='Hidaya';for(const id of ['platform','year','month'])$(id).value='all';[...$('metric').options].forEach(o=>o.selected=o.value==='all');applied={app:'Hidaya',platform:'all',metric:'all',metrics:[],year:'all',month:'all'};document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · HIDAYA MAIN';syncMetricOptions();syncMetricPickerChecks();render();});
+$('reset').addEventListener('click',()=>{
+ $('appFilter').value='Hidaya'; $('platform').value='all'; $('month').value='all';
+ [...yearSelect.options].forEach(o=>o.selected=o.value==='all');
+ [...metricSelect.options].forEach(o=>o.selected=o.value==='all');
+ applied={app:'Hidaya',platform:'all',metric:'all',metrics:[],year:'all',month:'all'};
+ document.querySelector('.eyebrow').textContent='PRODUCT ANALYTICS · HIDAYA MAIN';
+ syncMetricOptions(); syncMetricPickerChecks(); syncYearPickerChecks(); render();
+});
 $('export').addEventListener('click',()=>{
  const rows=filtered(), aggr=new Map();
  rows.forEach(r=>{const key=[r[1],r[2],r[3],r[0].slice(0,7)].join('|');if(!aggr.has(key))aggr.set(key,{platform:r[1],app:r[2],metric:r[3],ym:r[0].slice(0,7),sum:0,lastDate:r[0],lastValue:r[4]});const a=aggr.get(key);a.sum+=r[4]||0;if(r[0]>=a.lastDate){a.lastDate=r[0];a.lastValue=r[4];}});
@@ -516,6 +560,7 @@ $('export').addEventListener('click',()=>{
 });
 $('language').addEventListener('change',e=>{if(e.target.value==='ar'){alert('Arabic localization is not implemented in this preview yet. English remains the default.');e.target.value='en';}});
 buildMetricPicker();
+buildYearPicker();
 document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(btn.dataset.page!=='Overview')alert(btn.dataset.page+' is still a planned page; this build currently makes Overview filters, KPIs, chart, results, and CSV export functional.');}));
 window.addEventListener('resize',()=>render());
 render();
